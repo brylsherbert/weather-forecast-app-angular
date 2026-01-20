@@ -1,0 +1,34 @@
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors gap-3 sm:gap-4">
+  <!-- Date section - centered on small screens, left-aligned on larger -->
+  <div class="text-center sm:text-left sm:w-24 flex-shrink-0">
+    <div class="text-sm sm:text-base font-semibold text-gray-900 dark:text-gray-100">{{ getDayName(day().date) }}</div>
+    <div class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{{ getDate(day().date) }}</div>
+  </div>
+  
+  <!-- Weather icon and condition - centered on small screens -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4 flex-1 min-w-0">
+    @if (day().day.condition.icon) {
+      <img
+        [src]="day().day.condition.icon"
+        [alt]="day().day.condition.text"
+        class="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0"
+      />
+    }
+    <div class="text-center sm:text-left flex-1 min-w-0">
+      <div class="text-sm sm:text-base text-gray-800 dark:text-gray-200 font-medium truncate">{{ day().day.condition.text }}</div>
+      <div class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+        <span class="block sm:inline">Humidity: {{ day().day.avg_humidity }}%</span>
+        <span class="hidden sm:inline"> | </span>
+        <span class="block sm:inline">Wind: {{ day().day.maxwind_kph }} km/h</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Temperature - centered on small screens -->
+  <div class="flex items-center justify-center sm:justify-start sm:ml-4 flex-shrink-0">
+    <div class="text-center sm:text-right">
+      <div class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">{{ day().day.maxtemp_c }}°</div>
+      <div class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{{ day().day.mintemp_c }}°</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+@if (hasAlerts() && !loading()) {
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+    <div class="flex items-center space-x-2 mb-4">
+      <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+      </svg>
+      <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">Weather Alerts</h3>
+    </div>
+
+    <div class="space-y-4">
+      @for (alert of alertList(); track alert.headline) {
+        <div class="border-l-4 border-red-500 bg-red-50 dark:bg-red-900/20 rounded-r-lg p-4">
+          <div class="flex items-start justify-between mb-2">
+            <div class="flex-1">
+              <h4 class="font-bold text-gray-900 dark:text-gray-100 mb-1">{{ alert.headline }}</h4>
+              <div class="flex flex-wrap gap-2 mb-2">
+                <span [class]="'px-2 py-1 rounded text-xs font-semibold text-white ' + getSeverityColor(alert.severity)">
+                  {{ alert.severity }}
+                </span>
+                <span class="px-2 py-1 rounded text-xs font-semibold bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                  {{ alert.urgency }}
+                </span>
+                <span class="px-2 py-1 rounded text-xs font-semibold bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                  {{ alert.category }}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <p class="text-sm text-gray-700 dark:text-gray-300 mb-3">{{ alert.desc }}</p>
+          
+          @if (alert.instruction) {
+            <div class="bg-white dark:bg-gray-700 rounded p-3 mb-3">
+              <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">Instructions:</p>
+              <p class="text-sm text-gray-700 dark:text-gray-300">{{ alert.instruction }}</p>
+            </div>
+          }
+          
+          <div class="flex flex-wrap gap-4 text-xs text-gray-600 dark:text-gray-400">
+            @if (alert.effective) {
+              <div>
+                <span class="font-semibold">Effective:</span> {{ formatDate(alert.effective) }}
+              </div>
+            }
+            @if (alert.expires) {
+              <div>
+                <span class="font-semibold">Expires:</span> {{ formatDate(alert.expires) }}
+              </div>
+            }
+            @if (alert.areas) {
+              <div>
+                <span class="font-semibold">Areas:</span> {{ alert.areas }}
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

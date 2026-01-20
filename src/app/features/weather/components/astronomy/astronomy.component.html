@@ -1,0 +1,57 @@
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
+    <div class="flex items-center space-x-2">
+      <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+      <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">Astronomy</h3>
+    </div>
+    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+      <input
+        type="date"
+        [value]="astronomyDate()"
+        (input)="astronomyDate.set($any($event.target).value)"
+        class="flex-1 sm:flex-none px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:text-gray-100"
+      />
+      <button
+        type="button"
+        (click)="loadAstronomy()"
+        [disabled]="!astronomyDate() || loading()"
+        class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
+      >
+        Load
+      </button>
+    </div>
+  </div>
+
+  @if (astronomy()) {
+    @let astro = astronomy()!.astronomy.astro;
+    <div class="space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Sunrise</p>
+          <p class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{{ formatTime(astro.sunrise) }}</p>
+        </div>
+        <div class="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Sunset</p>
+          <p class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{{ formatTime(astro.sunset) }}</p>
+        </div>
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Moonrise</p>
+          <p class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{{ formatTime(astro.moonrise) }}</p>
+        </div>
+        <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Moonset</p>
+          <p class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{{ formatTime(astro.moonset) }}</p>
+        </div>
+      </div>
+      <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
+        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Moon Phase</p>
+        <p class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100">{{ astro.moon_phase }}</p>
+        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Illumination: {{ astro.moon_illumination }}%</p>
+      </div>
+    </div>
+  } @else {
+    <p class="text-gray-500 dark:text-gray-400 text-center py-4">Click "Load" to fetch astronomy data</p>
+  }
+</div>

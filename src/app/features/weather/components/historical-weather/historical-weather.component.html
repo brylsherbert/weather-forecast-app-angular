@@ -1,0 +1,116 @@
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+  <div class="flex items-center space-x-2 mb-4">
+    <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">Historical Weather</h3>
+  </div>
+
+  <!-- Date Picker -->
+  <div class="mb-6">
+    <label for="history-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      Select a date (from 2010-01-01 to today)
+    </label>
+    <div class="flex space-x-2">
+      <input
+        type="date"
+        id="history-date"
+        [value]="selectedDate()"
+        (input)="selectedDate.set($any($event.target).value)"
+        [min]="minDate"
+        [max]="maxDate"
+        class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-gray-100"
+      />
+      <button
+        type="button"
+        (click)="loadHistory()"
+        [disabled]="!selectedDate() || loading()"
+        class="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
+      >
+        @if (loading()) {
+          <span class="flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Loading...
+          </span>
+        } @else {
+          Load History
+        }
+      </button>
+    </div>
+  </div>
+
+  <!-- Historical Data Display -->
+  @if (loading()) {
+    <div class="flex items-center justify-center p-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+    </div>
+  }
+
+  @if (hasHistory() && historyDays().length > 0 && !loading()) {
+    <div class="space-y-4">
+      <div class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        <p class="font-semibold">Historical weather data for:</p>
+        <p>{{ getDateLabel(historyDays()[0].date) }}</p>
+      </div>
+
+      @for (day of historyDays(); track day.date_epoch) {
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <div class="font-semibold text-gray-900 dark:text-gray-100">{{ getDayName(day.date) }}</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">{{ day.date }}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ day.day.maxtemp_c }}°</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">{{ day.day.mintemp_c }}°</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <div>
+              <p class="text-gray-500 dark:text-gray-400 mb-1">Condition</p>
+              <p class="font-medium text-gray-800 dark:text-gray-100">{{ day.day.condition.text }}</p>
+            </div>
+            <div>
+              <p class="text-gray-500 dark:text-gray-400 mb-1">Humidity</p>
+              <p class="font-medium text-gray-800 dark:text-gray-100">{{ day.day.avg_humidity }}%</p>
+            </div>
+            <div>
+              <p class="text-gray-500 dark:text-gray-400 mb-1">Wind Speed</p>
+              <p class="font-medium text-gray-800 dark:text-gray-100">{{ day.day.maxwind_kph }} km/h</p>
+            </div>
+            <div>
+              <p class="text-gray-500 dark:text-gray-400 mb-1">Precipitation</p>
+              <p class="font-medium text-gray-800 dark:text-gray-100">{{ day.day.totalprecip_mm }} mm</p>
+            </div>
+          </div>
+
+          @if (day.hour && day.hour.length > 0) {
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+              <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Hourly Data (Sample)</p>
+              <div class="grid grid-cols-4 gap-2 text-xs">
+                @for (hour of day.hour.slice(0, 8); track hour.time_epoch) {
+                  <div class="bg-white dark:bg-gray-800 rounded p-2">
+                    <p class="text-gray-500 dark:text-gray-400">{{ getHour(hour.time) }}</p>
+                    <p class="font-semibold text-gray-800 dark:text-gray-100">{{ hour.temp_c }}°</p>
+                    <p class="text-gray-500 dark:text-gray-400">{{ hour.condition.text }}</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (!hasHistory() && !loading() && selectedDate()) {
+    <div class="text-center text-gray-500 dark:text-gray-400 py-8">
+      <p>No historical data available for the selected date.</p>
+      <p class="text-sm mt-2">Please select a date and click "Load History"</p>
+    </div>
+  }
+</div>

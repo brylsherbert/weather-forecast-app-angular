@@ -1,0 +1,67 @@
+@if (forecastDays().length > 0 && !loading()) {
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Hourly Forecast</h3>
+
+    <!-- Day Selector -->
+    <div class="flex space-x-2 mb-6 overflow-x-auto pb-2">
+      @for (day of forecastDays(); track day.date_epoch; let i = $index) {
+        <button
+          type="button"
+          (click)="selectDay(i)"
+          [class]="'px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors ' + 
+                   (selectedDayIndex() === i 
+                     ? 'bg-blue-500 text-white' 
+                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600')"
+        >
+          {{ getDateLabel(day.date, i) }}
+        </button>
+      }
+    </div>
+
+    <!-- Hourly Timeline -->
+    <div class="overflow-x-auto">
+      <div class="flex space-x-4 min-w-max pb-4">
+        @for (hour of selectedDayHours(); track hour.time_epoch; let i = $index) {
+          <div class="flex flex-col items-center min-w-[80px]">
+            <div class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ getHour(hour.time) }}</div>
+            @if (hour.condition.icon) {
+              <img
+                [src]="hour.condition.icon"
+                [alt]="hour.condition.text"
+                class="w-10 h-10 mb-2"
+              />
+            }
+            <div class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-1">{{ hour.temp_c }}°</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400 text-center mb-2">{{ hour.condition.text }}</div>
+            <div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+              </svg>
+              <span>{{ hour.humidity }}%</span>
+            </div>
+            <div class="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span>{{ hour.wind_kph }} km/h</span>
+            </div>
+            @if (hour.precip_mm > 0) {
+              <div class="flex items-center space-x-1 text-xs text-blue-500 dark:text-blue-400 mt-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+                </svg>
+                <span>{{ hour.precip_mm }}mm</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+@if (forecastDays().length === 0 && !loading()) {
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 text-center text-gray-500 dark:text-gray-400">
+    <p>No hourly forecast data available</p>
+  </div>
+}

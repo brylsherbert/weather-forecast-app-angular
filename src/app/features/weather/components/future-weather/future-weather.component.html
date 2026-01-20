@@ -1,0 +1,57 @@
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
+    <div class="flex items-center space-x-2">
+      <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">Future Weather</h3>
+    </div>
+    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+      <input
+        type="date"
+        [value]="futureDate()"
+        (input)="futureDate.set($any($event.target).value)"
+        [min]="minFutureDate"
+        [max]="maxFutureDate"
+        class="flex-1 sm:flex-none px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-100"
+      />
+      <button
+        type="button"
+        (click)="loadFuture()"
+        [disabled]="!futureDate() || loading()"
+        class="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
+      >
+        Load
+      </button>
+    </div>
+  </div>
+
+  @if (future() && future()!.forecast.forecastday.length > 0) {
+    @let day = future()!.forecast.forecastday[0];
+    <div class="space-y-4">
+        <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2">Date: {{ formatDate(day.date) }}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div>
+              <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Max Temp</p>
+              <p class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{{ day.day.maxtemp_c }}°C</p>
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Min Temp</p>
+              <p class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{{ day.day.mintemp_c }}°C</p>
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Condition</p>
+              <p class="text-sm sm:text-base font-medium text-gray-800 dark:text-gray-100">{{ day.day.condition.text }}</p>
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Precipitation</p>
+              <p class="text-sm sm:text-base font-medium text-gray-800 dark:text-gray-100">{{ day.day.totalprecip_mm }} mm</p>
+            </div>
+          </div>
+        </div>
+    </div>
+  } @else {
+    <p class="text-gray-500 dark:text-gray-400 text-center py-4">Select a future date and click "Load"</p>
+  }
+</div>

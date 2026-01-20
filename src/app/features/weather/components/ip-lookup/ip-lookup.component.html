@@ -1,0 +1,59 @@
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
+    <div class="flex items-center space-x-2">
+      <svg class="w-6 h-6 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+      </svg>
+      <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">IP Lookup</h3>
+    </div>
+    <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
+      <input
+        type="text"
+        [value]="ipAddress()"
+        (input)="ipAddress.set($any($event.target).value)"
+        placeholder="IP address"
+        class="flex-1 sm:flex-none px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-pink-500 dark:bg-gray-700 dark:text-gray-100"
+      />
+      <button
+        type="button"
+        (click)="loadIPLookup()"
+        [disabled]="!ipAddress() || loading()"
+        class="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
+      >
+        Lookup
+      </button>
+    </div>
+  </div>
+
+  @if (ipLookup()) {
+    @let ip = ipLookup()!;
+    <div class="space-y-4">
+      <div class="bg-pink-50 dark:bg-pink-900/20 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">IP Address</p>
+          <p class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100">{{ ip.ip }}</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Type: {{ ip.type }}</p>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Location</p>
+          <p class="text-sm sm:text-base font-medium text-gray-800 dark:text-gray-100">{{ ip.city }}, {{ ip.region }}</p>
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">{{ ip.country_name }} ({{ ip.country_code }})</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div>
+            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Coordinates</p>
+            <p class="text-sm sm:text-base font-medium text-gray-800 dark:text-gray-100">{{ ip.lat }}, {{ ip.lon }}</p>
+          </div>
+          <div>
+            <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Time Zone</p>
+            <p class="text-sm sm:text-base font-medium text-gray-800 dark:text-gray-100">{{ ip.tz_id }}</p>
+          </div>
+        </div>
+      <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
+        <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Local Time</p>
+        <p class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100">{{ ip.localtime }}</p>
+      </div>
+    </div>
+  } @else {
+    <p class="text-gray-500 dark:text-gray-400 text-center py-4">Enter IP address and click "Lookup"</p>
+  }
+</div>

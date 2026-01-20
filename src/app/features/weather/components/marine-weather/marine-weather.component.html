@@ -1,0 +1,51 @@
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 sm:p-6">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
+    <div class="flex items-center space-x-2">
+      <svg class="w-6 h-6 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+      </svg>
+      <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">Marine Weather</h3>
+    </div>
+    <button
+      type="button"
+      (click)="loadMarine()"
+      [disabled]="loading()"
+      class="px-4 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
+    >
+      Load
+    </button>
+  </div>
+
+  @if (marine() && marine()!.forecast.forecastday.length > 0) {
+    @let day = marine()!.forecast.forecastday[0];
+    <div class="space-y-4">
+        <div class="bg-cyan-50 dark:bg-cyan-900/20 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2">Date: {{ day.date }}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div>
+              <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Max Temp</p>
+              <p class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{{ day.day.maxtemp_c }}°C</p>
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Min Temp</p>
+              <p class="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">{{ day.day.mintemp_c }}°C</p>
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Wind Speed</p>
+              <p class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100">{{ day.day.maxwind_kph }} km/h</p>
+            </div>
+            <div>
+              <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Humidity</p>
+              <p class="text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100">{{ day.day.avg_humidity }}%</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 sm:p-4">
+          <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Condition</p>
+          <p class="text-sm sm:text-base font-medium text-gray-800 dark:text-gray-100">{{ day.day.condition.text }}</p>
+        </div>
+    </div>
+  } @else {
+    <p class="text-gray-500 dark:text-gray-400 text-center py-4">Click "Load" to fetch marine weather data</p>
+  }
+</div>
