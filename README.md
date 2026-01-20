@@ -117,6 +117,42 @@ To build with production configuration:
 ng build --configuration production
 ```
 
+## Deployment
+
+### Deploying to Netlify
+
+This project is configured for easy deployment to [Netlify](https://www.netlify.com):
+
+1. **Push your code to GitHub**
+   ```bash
+   git push origin main
+   ```
+
+2. **Connect to Netlify**
+   - Go to [Netlify](https://app.netlify.com)
+   - Click "Add new site" → "Import an existing project"
+   - Connect to your GitHub repository
+   - Select the repository: `weather-forecast-app-angular`
+
+3. **Configure Build Settings**
+   - Build command: `npm run build:netlify` (already configured in `netlify.toml`)
+   - Publish directory: `dist/weather-forecast-app-angular-tailwind/browser`
+   - These are automatically set via `netlify.toml`
+
+4. **Set Environment Variables**
+   - Go to Site settings → Environment variables
+   - Add a new variable:
+     - **Key**: `WEATHER_API_KEY`
+     - **Value**: Your WeatherAPI.com API key
+   - This will be automatically injected during the build process
+
+5. **Deploy**
+   - Click "Deploy site"
+   - Netlify will build and deploy your application
+   - Your site will be live at `https://your-site-name.netlify.app`
+
+**Note**: The build script automatically replaces the API key placeholder with the `WEATHER_API_KEY` environment variable during the Netlify build process, so your API key never needs to be committed to the repository.
+
 ## Project Structure
 
 ```
