@@ -57,8 +57,8 @@ npm install -g @angular/cli
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/weather-forecast-app-angular-tailwind.git
-   cd weather-forecast-app-angular-tailwind
+   git clone https://github.com/yourusername/weather-forecast-app-angular.git
+   cd weather-forecast-app-angular
    ```
 
 2. **Install dependencies**
